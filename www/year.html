@@ -1,0 +1,30 @@
+<!-- tab:year.html -->
+<ons-page id="year-page" ng-controller="CalendarControllerY">
+  <!-- リストrefresh用pull fook -->
+  <ons-pull-hook ng-action="refreshListView($done)" var="loader">
+    <span ng-switch="loader.getCurrentState()">
+      <span ng-switch-when="initial"><ons-icon size="35px" icon="ion-arrow-down-a"></ons-icon> Pull down to refresh</span>
+      <span ng-switch-when="preaction"><ons-icon size="35px" icon="ion-arrow-up-a"></ons-icon> Release to refresh</span>
+      <span ng-switch-when="action"><ons-icon size="35px" spin="true" icon="ion-load-d"></ons-icon> Loading data...</span>
+    </span>
+  </ons-pull-hook>
+  
+  <!-- toolbar -->
+  <ons-toolbar>
+    <div class="center">Year</div>
+  </ons-toolbar>
+  
+  <!-- list -->
+  <ons-list>
+    <ons-list-item ng-show="months.length === 0">
+      <div class="info">
+        <ons-icon size="20px" icon="ion-arrow-down-a"></ons-icon> Pull down to refresh</span>
+      </div>
+    </ons-list-item>
+    <ons-list-item modifier="chevron" ng-repeat="month in months" ng-click="showMonth($index)">
+      <ons-row>
+        <ons-col>{{month.year}}/{{month.month}}</ons-col>
+      </ons-row>
+    </ons-list-item>
+  </ons-list>
+</ons-page>
