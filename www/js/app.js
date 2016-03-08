@@ -6,17 +6,20 @@
   
   // myAppモジュール
   var module = angular.module('myApp', ['onsen.directives']);
-  
+    
+  // 基準日（先日付が必要になったら改修すること）
+  module.value('$baseDate', new Date());
+
   // List Year, Month(order by date asc)
   // {months: [{year: , month: }...], selectedYM: {}}
   module.factory('$dataYM', ['$baseDate', function($baseDate) {
     var dataYM = {};
-    var periodY = 20;
+    var periodY = 2;
     
     // 基準日と範囲
     var today = $baseDate;
-    var fromYear = today.getFullYear() - periodY;
-    var toYear = today.getFullYear();
+    var fromYear = today.getFullYear();
+    var toYear = today.getFullYear() + periodY;
     var currentYear = fromYear;
     
     // 収集する値
@@ -93,9 +96,6 @@
     return service;
   });
   
-  // 基準日
-  module.value('$baseDate', new Date());  // 先日付が必要になったら改修すること
-  
   // 共通コントローラ
   module.controller('AppController', ['$scope', '$timeout', function($scope, $timeout) {
     $scope.doSomething = function() {
@@ -108,7 +108,8 @@
   // year用コントローラ
   module.controller('CalendarControllerY', ['$scope', '$timeout', '$dataYM', '$dataDays', function($scope, $timeout, $dataYM, $dataDays) {
     $scope.months = $dataYM.months;
-    // ons-lazy-repeat用
+    $scope.months = [];
+    // ons-lazy-repeat用デリゲート
     $scope.MyDelegate = {
       configureItemScope: function(index, itemScope) {
         // repeatItemの中身を替えればリフレッシュされる
@@ -116,11 +117,11 @@
       },
       calculateItemHeight: function(index) {
         // 要素の高さをpx指定
-        return 50;
+        return 55;
       },
       countItems: function() {
         // 全体の要素数
-        return $dataYM.months.length;
+        return $scope.months.length;
       },
       destroyItemScope: function(index, scope) {
         // 画面外に移動した要素を削除
@@ -131,18 +132,19 @@
     $scope.showMonth = function(index) {
       $timeout(function() {
         var selectedYM = $scope.months[index];
-        //alert('index:' + index + '\nym:' + selectedYM.year + '/' + selectedYM.month);
+        alert('index:' + index + '\nym:' + selectedYM.year + '/' + selectedYM.month);
         $dataYM.selectedYM = selectedYM;
         $dataDays.data.days = $dataDays.getData(selectedYM);
         $scope.navi.pushPage('month.html');
       }, 100);
     };
-    // pull hookのデータロード(見た目の追加のみ）
+    /*
+    // pull hookのデータロード(現在+1年追加）
     $scope.refreshListView = function($done) {
       $timeout(function() {
         var months = $scope.months;
         var now = new Date();
-        var to = {year  : now.getFullYear(),
+        var to = {year  : now.getFullYear() + 1,
                   month : now.getMonth() + 1};
         var from = {};
         
@@ -151,7 +153,7 @@
           from.year = now.getFullYear();
           from.month = now.getMonth();
         } else {
-          from = months[0];
+          from = months[months.length - 1];
         }
         // 開始年月から現在の年月までを差し込む.
         for(var year = from.year; year <= to.year; year++) {
@@ -165,11 +167,68 @@
               continue;
             }
             // 追加
-            //$scope.months.unshift({year: year, month: month});
             $scope.months.push({year: year, month: month});
           }
         }
-        //終了したのでコールバックを呼ぶ
+        // 処理終了後にコールバックを呼ぶ
+        $done();
+      }, 100);
+    };
+    */
+    // pull hookのデータロード(現在-1年追加）
+    $scope.refreshListView = function($done) {
+      $timeout(function() {
+        var months = $scope.months;
+        var now = new Date();
+        var from = {};
+        var to = {};
+        // 開始年月を決定
+        if (months.length === 0 ) {
+          // 年月リスト未設定の場合
+          // 開始・終了年月取得
+          from = {year : now.getFullYear(),
+                  month: now.getMonth() + 1};
+          to = {year : now.getFullYear() + 2,
+                month: now.getMonth() + 1};
+          // 現在の年月から1年後の年月までを追加
+          for(var year = from.year; year <= to.year; year++) {
+            for(var month = 1; month <= 12; month++) {
+              // 開始年月より過去日付は読み飛ばす
+              if (year <= from.year && month < from.month) {
+                continue;
+              }
+              // 終了年月より先日付は読み飛ばす
+              if (year >= to.year && month > to.month) {
+                continue;
+              }
+              // 追加
+              $scope.months.push({year: year, month: month});
+            }
+          }
+        } else {
+          // 年月リスト設定済みの場合
+          // 開始・終了年月取得
+          from = {year : months[0].year - 1,
+                  month: months[0].month};
+          to = {year : months[0].year,
+                month: months[0].month - 1};
+          // 1年前の年月から現在の年月までを挿入
+          for(var year = to.year; year >= from.year; year--) {
+            for(var month = 12; month >= 1; month--) {
+              // 開始年月より過去日付は読み飛ばす
+              if (year <= from.year && month < from.month) {
+                continue;
+              }
+              // 終了年月より先日付は読み飛ばす
+              if (year >= to.year && month > to.month) {
+                continue;
+              }
+              // 挿入
+              $scope.months.unshift({year: year, month: month});
+            }
+          }
+        }
+        // 処理終了後にコールバックを呼ぶ
         $done();
       }, 100);
     };

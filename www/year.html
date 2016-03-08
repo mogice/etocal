@@ -21,13 +21,6 @@
         <ons-icon size="20px" icon="ion-arrow-down-a"></ons-icon> Pull down to refresh</span>
       </div>
     </ons-list-item>
-    <!--
-    <ons-list-item modifier="chevron" ng-repeat="month in months" ng-click="showMonth($index)">
-      <ons-row>
-        <ons-col>{{month.year}}/{{month.month}}</ons-col>
-      </ons-row>
-    </ons-list-item>
-    -->
     <ons-list-item modifier="chevron" ons-lazy-repeat="MyDelegate" ng-click="showMonth($index)">
       {{item.year}}/{{item.month}}
     </ons-list-item>
