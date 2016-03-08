@@ -1,25 +1,28 @@
 // This is a JavaScript file
 
 (function() {
+  // strictモード
   'use strict';
+  
+  // myAppモジュール
   var module = angular.module('myApp', ['onsen.directives']);
   
-  //app
-  module.controller('AppController', function($scope, $timeout) {
+  // app
+  module.controller('AppController', ['$scope', '$timeout', function($scope, $timeout) {
     $scope.doSomething = function() {
       $timeout(function() {
         alert('tappaed');
       }, 100);
     };
-  });
+  }]);
   
-  //day
-  module.controller('CalendarControllerD', function($scope, $timeout, $dataDays) {
+  // day
+  module.controller('CalendarControllerD', ['$scope', '$timeout', '$dataDays', function($scope, $timeout, $dataDays) {
     $scope.day = $dataDays.data.selectedDay;
-  });
+  }]);
   
-  //month
-  module.controller('CalendarControllerM', function($scope, $timeout, $dataDays) {
+  // month
+  module.controller('CalendarControllerM', ['$scope', '$timeout', '$dataDays', function($scope, $timeout, $dataDays) {
     $scope.days = $dataDays.data.days;
     $scope.showDay = function(index) {
       $timeout(function() {
@@ -28,14 +31,34 @@
         $scope.navi.pushPage('day.html', {title : selectedDay.title});
       }, 100);
     };
-  });
+  }]);
   
-  //year
-  module.controller('CalendarControllerY', function($scope, $timeout, $dataYM, $dataDays) {
+  // year
+  module.controller('CalendarControllerY', ['$scope', '$timeout', '$dataYM', '$dataDays', function($scope, $timeout, $dataYM, $dataDays) {
     $scope.months = $dataYM.months;
+    // ons-lazy-repeat用
+    $scope.MyDelegate = {
+      configureItemScope: function(index, itemScope) {
+        // repeatItemの中身を替えればリフレッシュされる
+        itemScope.item = $scope.months[index];
+      },
+      calculateItemHeight: function(index) {
+        // 要素の高さをpx指定
+        return 50;
+      },
+      countItems: function() {
+        // 全体の要素数
+        return $dataYM.months.length;
+      },
+      destroyItemScope: function(index, scope) {
+        // 画面外に移動した要素を削除
+      }
+    };
+    // 年月クリック時処理
     $scope.showMonth = function(index) {
       $timeout(function() {
-        var selectedYM = $dataYM.months[index];
+        var selectedYM = $scope.months[index];
+        //alert('index:' + index + '\nym:' + selectedYM.year + '/' + selectedYM.month);
         $dataYM.selectedYM = selectedYM;
         $dataDays.data.days = $dataDays.getData(selectedYM);
         $scope.navi.pushPage('month.html');
@@ -48,7 +71,7 @@
         var now = new Date();
         var to = {year  : now.getFullYear(),
                   month : now.getMonth() + 1};
-        var from={};
+        var from = {};
         
         // 開始年月を決定
         if (months.length === 0 ) {
@@ -69,18 +92,19 @@
               continue;
             }
             // 追加
-            $scope.months.unshift({year: year, month: month});
-          }    
+            //$scope.months.unshift({year: year, month: month});
+            $scope.months.push({year: year, month: month});
+          }
         }
         //終了したのでコールバックを呼ぶ
         $done();
       }, 100);
     };
-  });
+  }]);
   
-  //data
-  //List days
-  //data:{days:[{}...],selectedDay:{}}
+  // data
+  // List days
+  // data: {days: [{}...], selectedDay: {}}
   module.factory('$dataDays', function() {
     var service = {
       data : {},
@@ -123,8 +147,8 @@
     return service;
   });
   
-  //List Year,Month(order by date desc)
-  //{months:[{year:,month:}...],selectedYM:{}}
+  // List Year,Month(order by date desc)
+  // {months: [{year: , month: }...], selectedYM: {}}
   module.value('$baseDate', new Date());  // 先日付が必要になったら改修すること
   module.factory('$dataYM', ['$baseDate', function($baseDate) {
     var dataYM = {};
@@ -134,32 +158,32 @@
     var today = $baseDate;
     var fromYear = today.getFullYear() - periodY;
     var toYear = today.getFullYear();
-    var currentYear = toYear;
+    var currentYear = fromYear;
     
     // 収集する値
     var months = [];
     var years =[];
     
     // ひと月ずつ加算
-    while(currentYear >= fromYear) {
+    while(currentYear <= toYear) {
       // 12か月を追加
-      for(var currentMonth =  11; currentMonth >= 0; currentMonth--) {
-        // 基準年月より先日付は読み飛ばす
+      for(var currentMonth =  0; currentMonth <= 11; currentMonth++) {
+        // 基準年月より先月は読み飛ばす
         if (currentYear === today.getFullYear() &&  currentMonth > today.getMonth()) {
           continue;
         }
         months.push({ year : currentYear, month: currentMonth + 1});
       }
       years.push(currentYear);
-      // カウントダウン
-      currentYear--;
+      // 年カウントアップ
+      currentYear++;
     }
     
     // 整形
     dataYM = {
       years : years,
+      months : months,
       today : today,
-      months : months
     };
     
     // 復帰
