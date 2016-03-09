@@ -1,11 +1,14 @@
 <!-- tab:year.html -->
 <ons-page id="year-page" ng-controller="CalendarControllerY">
   <!-- リストrefresh用pull fook -->
-  <ons-pull-hook ng-action="refreshListView($done)" var="loader">
+  <ons-pull-hook ng-action="refreshListView($done)" var="loader" height="0px" threshold-height="0px">
     <span ng-switch="loader.getCurrentState()">
+    <!--
       <span ng-switch-when="initial"><ons-icon size="35px" icon="ion-arrow-down-a"></ons-icon> Pull down to refresh</span>
       <span ng-switch-when="preaction"><ons-icon size="35px" icon="ion-arrow-up-a"></ons-icon> Release to refresh</span>
       <span ng-switch-when="action"><ons-icon size="35px" spin="true" icon="ion-load-d"></ons-icon> Loading data...</span>
+    -->
+      <span ng-switch-when="action"><ons-icon size="35px" spin="true" icon="ion-load-d"></ons-icon></span>
     </span>
   </ons-pull-hook>
   
@@ -22,7 +25,11 @@
       </div>
     </ons-list-item>
     <ons-list-item modifier="chevron" ons-lazy-repeat="MyDelegate" ng-click="showMonth($index)">
-      {{item.year}}/{{item.month}}
+      <ons-row>
+        <ons-col>
+          {{item.year}}年{{item.month}}月
+        </ons-col>
+      </ons-row>
     </ons-list-item>
   </ons-list>
 </ons-page>

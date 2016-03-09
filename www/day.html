@@ -7,18 +7,14 @@
   
   <!-- 概要見出し -->
   <ons-list modifier="inset" style="margin-top: 10px">
-    <ons-list-header>{{day.date | date:'yyyy年MM月dd日'}}の様子</ons-list-header>
+    <ons-list-header>{{day.date | date:'yyyy年MM月dd日'}}({{day.day}})</ons-list-header>
     <ons-list-item class="item">
       <ons-row>
         <ons-col width="60px"> 
           <div class="item-thum"></div>
         </ons-col>
         <ons-col>
-          <header>
-            <span class="item-title">{{day.date | date:'yyyy/MM/dd'}}</span>
-            <span class="item-label">{{day.date | date:'HH:mm'}}</span>
-          </header>
-          <p class="item-desc">{{day.memo}}</p>
+          {{day.eto}}
         </ons-col>
       </ons-row>
     </ons-list-item>
