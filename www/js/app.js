@@ -6,7 +6,71 @@
   
   // myAppモジュール
   var module = angular.module('myApp', ['onsen.directives']);
-
+  
+  // データベースの準備
+  module.factory('$db', function() {
+    // データベース接続
+    var db = openDb('etocal_db', '', 'etocal db', 1024 * 1024 * 20);
+    var sql = "";
+//    // データベース削除
+//    var dropsql = "DROP TABLE IF EXISTS testtbl;";
+//    var dropsql = "DROP TABLE IF EXISTS cal_data;";
+//    execSQL(db, sql, [], function(rs) {
+//      alert('table drop!');
+//    }, function(error) {
+//      alert(error.message);
+//    });
+    // テーブル作成
+    sql = "CREATE TABLE IF NOT EXISTS cal_data("
+        + "id INTEGER PRIMARY KEY,"
+        + "start_yaer INTEGER,"
+        + "start_month INTEGER,"
+        + "start_date INTEGER,"
+        + "start_time TEXT,"
+        + "end_yaer INTEGER,"
+        + "end_month INTEGER,"
+        + "end_date INTEGER,"
+        + "end_time TEXT,"
+        + "title TEXT,"
+        + "location TEXT,"
+        + "description TEXT"
+        + ");";
+    execSQL(db, sql, [], function(rs) {
+//      // テーブル作成成功
+//      sql = "SELECT id from cal_data where id = 1";
+//      execSQL(db, sql, [], function(rs) {
+//        if (rs.rows.length === 0 ) {
+//          sql = "INSERT INTO testtbl values(1, 'memo1')";
+//          execSQL(db, sql, [], function(rs) {
+//            alert(sql);
+//          }, function(error) {
+//            alert(error.message);
+//          });
+//        }
+//      }, function(error) {
+//        alert(error.message);
+//      });
+//      // 
+//      sql = "SELECT id from cal_data where id = 2";
+//      execSQL(db, sql, [], function(rs) {
+//        if (rs.rows.length === 0 ) {
+//          sql = "INSERT INTO testtbl values(2, 'memo2')";
+//          execSQL(db, sql, [], function(rs) {
+//            alert(sql);
+//          }, function(error) {
+//            alert(error.message);
+//          });
+//        }
+//      }, function(error) {
+//        alert(error.message);
+//      });
+    }, function(error) {
+      // テーブル作成失敗
+      alert(error.message);
+    });
+    return db;
+  });
+  
   // List Year, Month(order by date asc)
   // {months: [{year: , month: }...], selectedYM: {}}
   module.factory('$dataYM', function() {
@@ -35,8 +99,13 @@
         if (year >= to.year && month > to.month) {
           continue;
         }
+        // 九星取得
+        // --対象日取得
+        var currentDate = new Date(year, month - 1, 1);
+        // --干支算出
+        var etoObj = new lib.EtoObj(currentDate);
         // 年月追加
-        months.push({year: year, month: month});
+        months.push({year: year, month: month, kyusei: etoObj.mKyusei});
       }
       // 年追加
       years.push(year);
@@ -55,25 +124,74 @@
   
   // List days
   // data: {days: [{}...], selectedDay: {}}
-  module.factory('$dataDays', function() {
+  module.factory('$dataDays', ['$db', function($db) {
     var service = {
       data : {},
       getData : function(selectedYM) {
+        // 年の干支情報
+        var jkdata = ['庚', '辛', '壬', '癸', '甲', '乙', '丙', '丁', '戊', '己'];
+        var jkdataYomi = ['かのえ', 'かのと', 'みずのえ', 'みずのと', 'きのえ', 'きのと', 'ひのえ', 'ひのと', 'つちのえ', 'つちのと'];
+        var jshidata = ['申', '酉', '戌', '亥', '子', '丑', '寅', '卯', '辰', '巳', '午', '未'];
+        var jshidataYomi = ['さる', 'とり', 'いぬ', 'い', 'ね', 'うし', 'とら', 'う', 'たつ', 'み', 'うま', 'ひつじ'];
+        // 年家九星情報
+        var kyuseidata_y = ['二黒土星', '一白水星', '九紫火星', '八白土星', '七赤金星', '六白金星', '五黄土星', '四緑木星', '三碧木星'];
+        // 月家九星情報
+        var kyuseidata_m = ['四緑木星', '三碧木星', '二黒土星', '一白水星', '九紫火星', '八白土星', '七赤金星', '六白金星', '五黄土星'];
+        // 曜日情報
         var day_ja = ['日', '月', '火', '水', '木', '金', '土'];
+        // 日の情報
         var days = [];
         var first = new Date(selectedYM.year, selectedYM.month - 1, 1);
         var last = new Date(selectedYM.year, selectedYM.month, 0);
         var first_day = first.getDay();
         var last_date = last.getDate();
+        
+//        var sql = "SELECT memo from testtbl where id = ?";
+        var sql = "SELECT id from cal_data ORDER BY id DESC;";
+        var params = [];
+//        params.push(1);
+        execSQL($db, sql, params, function(rs) {
+          for (var i=0; i < rs.rows.length; i++) {
+            var row = rs.rows.item(i);
+            alert(row.id);
+          }
+        }, function(error) {
+          alert(error.message);
+        });
+        
         for (var date = 1; date <= last_date; date++) {
+          // 対象日取得
           var currentDate = new Date(selectedYM.year, selectedYM.month - 1, date);
+          // 干支算出
           var etoObj = new lib.EtoObj(currentDate);
-          var eto = etoObj.dJikkan.kanji + etoObj.dJyunishi.kanji + 
-                    '(' + etoObj.dJikkan.yomi + etoObj.dJyunishi.yomi + ')';
+          // 日の干支編集
+          var eto_d = etoObj.dJikkan.kanji + etoObj.dJyunishi.kanji + 
+                      '(' + etoObj.dJikkan.yomi + etoObj.dJyunishi.yomi + ')';
+          // 年の干支編集
+          var eto_y = etoObj.yJikkan.kanji + etoObj.yJyunishi.kanji + 
+                      '(' + etoObj.yJikkan.yomi + etoObj.yJyunishi.yomi + ')';
+//          var eto_y = jkdata[kr.year % 10] + jshidata[kr.year % 12] + 
+//                      '(' + jkdataYomi[kr.year % 10] + jshidataYomi[kr.year % 12] + ')';
+          // 旧暦情報取得
+          var kr = new kyureki(currentDate.getJD());
+//          // 年家九星の取得（旧暦）
+//          var yKyuseiNum = kr.year % 9;
+//          var yKyusei = kyuseidata_y[yKyuseiNum];
+//          // 月家九星の取得（旧暦）
+//          var mKyuseiNum = kr.year % 3 * 3 + kr.month;
+//          if (mKyuseiNum > 8) {
+//            mKyuseiNum = mKyuseiNum - 9;
+//          }
+//          var mKyusei = kyuseidata_m[mKyuseiNum];
+          // 日の情報を追加
           days.push({
             date    : currentDate,
             day     : day_ja[currentDate.getDay()],
-            eto     : eto,
+            eto_d   : eto_d,
+            eto_y   : eto_y,
+            rokuyo  : kr.rokuyo,
+            kyusei_y: etoObj.yKyusei,
+            kyusei_m: etoObj.mKyusei,
             food    : [{date:new Date(2015, 2, 16, 9, 0, 0, 0), amount: 'たくさん', memo: ''},
                        {date:new Date(2015, 2, 16, 18, 0, 0, 0), amount: 'ふつう', memo: 'おやつ少しとかメモってみたり。おやつ枠は別に作ったがいいかなあ。'}],
             medicine: [{date:new Date(2015, 2, 16, 9, 0, 0, 0), amount: '2', memo: '調子が悪かったのでお薬大目。'},
@@ -86,15 +204,26 @@
       }
     };
     return service;
-  });
+  }]);
   
   // 共通コントローラ
-  module.controller('AppController', ['$scope', '$timeout', function($scope, $timeout) {
+  module.controller('AppController', ['$scope', '$timeout', '$db', function($scope, $timeout, $db) {
     $scope.doSomething = function() {
       $timeout(function() {
         alert('tappaed');
       }, 100);
     };
+  }]);
+  
+  // home用コントローラ
+  module.controller('homeController', ['$scope', '$timeout', '$dataDays', function($scope, $timeout, $dataDays) {
+    ons.ready(function() {
+      var now = new Date();
+      $dataDays.data.days = $dataDays.getData({year: now.getFullYear(), month: now.getMonth() + 1});
+      var selectedDay = $dataDays.data.days[now.getDate() - 1];
+      $dataDays.data.selectedDay = selectedDay;
+      $scope.day = $dataDays.data.selectedDay;
+    });
   }]);
   
   // year用コントローラ

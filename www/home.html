@@ -1,3 +1,30 @@
-<ons-toolbar>
-    <div class="center">Home</div>
-</ons-toolbar>
+<ons-page id="home-page" ng-controller="homeController">
+  <ons-toolbar>
+      <div class="center">Home</div>
+  </ons-toolbar>
+  
+  <!-- 概要見出し -->
+  <ons-list modifier="inset" style="margin-top: 10px">
+    <ons-list-header>{{day.date | date:'yyyy年MM月dd日'}}({{day.day}})</ons-list-header>
+    <ons-list-item class="item">
+      <ons-row>
+        <ons-col>
+          年の九星:{{day.kyusei_y}}<br>
+          年の干支:{{day.eto_y}}
+        </ons-col>
+      </ons-row>
+      <ons-row>
+        <!--
+        <ons-col width="60px"> 
+          <div class="item-thum"></div>
+        </ons-col>
+        -->
+        <ons-col>
+          月の九星:{{day.kyusei_m}}<br>
+          日の干支:{{day.eto_d}}<br>
+          六曜:{{day.rokuyo}}
+        </ons-col>
+      </ons-row>
+    </ons-list-item>
+  </ons-list>
+</ons-page>

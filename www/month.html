@@ -8,14 +8,19 @@
   <ons-list ng-controller="CalendarControllerM">
     <ons-list-item modifier="chevron" class="item" ng-repeat="day in days" ng-click="showDay($index)">
       <ons-row>
+        <!--
         <ons-col width="60px"> 
           <div class="item-thum"></div>
         </ons-col>
+        -->
         <ons-col>
           <header>
             <span class="item-title">{{day.date | date:'yyyy/MM/dd'}}({{day.day}})</span>
           </header>
-          <p class="item-desc">{{day.eto}}</p>
+          <p class="item-desc">
+            {{day.eto_d}}<br>
+            {{day.rokuyo}}
+          </p>
         </ons-col>
       </ons-row>                          
     </ons-list-item>

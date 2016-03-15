@@ -1,15 +1,25 @@
 // This is a JavaScript file
 
 (function(lib) {
-  var COEFFICIENT = 24 * 60 * 60 * 1000; //日数とミリ秒を変換する係数
-  var DATES_OFFSET = 70 * 365 + 17 + 2; //「1900/1/0」～「1970/1/1」 (日数)
-  var MILLIS_DIFFERENCE = 9 * 60 * 60 * 1000; //UTCとJSTの時差 (ミリ秒)
+  // 日数とミリ秒を変換する係数
+  var COEFFICIENT = 24 * 60 * 60 * 1000;
+  // 「1900/1/0」～「1970/1/1」 (日数)
+  var DATES_OFFSET = 70 * 365 + 17 + 2;
+  // UTCとJSTの時差 (ミリ秒)
+  var MILLIS_DIFFERENCE = 9 * 60 * 60 * 1000;
+  // 年家九星情報
+  var KYUSEIDATA_Y = ['二黒土星', '一白水星', '九紫火星', '八白土星', '七赤金星', '六白金星', '五黄土星', '四緑木星', '三碧木星'];
+  // 月家九星情報
+  var KYUSEIDATA_M = ['四緑木星', '三碧木星', '二黒土星', '一白水星', '九紫火星', '八白土星', '七赤金星', '六白金星', '五黄土星'];
+  // コンストラクタ
   lib.EtoObj = function(date) {
+    // 日付セット
     var hiduke = new Date(date);
     hiduke.setHours(0);
     hiduke.setMinutes(0);
     hiduke.setSeconds(0);
     hiduke.setMilliseconds(0);
+    // 年・日の干支計算
     var yTrunkNum = (hiduke.getFullYear() + 6) % 10 + 1;
     var yBranchNum = (hiduke.getFullYear() + 8) % 12 + 1;
     var dTrunkNum = (((hiduke.getTime() + MILLIS_DIFFERENCE) / COEFFICIENT + DATES_OFFSET) - 2) % 10 + 1;
@@ -18,6 +28,15 @@
     this.yJyunishi = this.branch(yBranchNum);
     this.dJikkan = this.trunk(dTrunkNum);
     this.dJyunishi = this.branch(dBranchNum);
+    // 年家九星計算
+    var yKyuseiNum = hiduke.getFullYear() % 9;
+    this.yKyusei = KYUSEIDATA_Y[yKyuseiNum];
+    // 月家九星計算
+    var mKyuseiNum = hiduke.getFullYear() % 3 * 3 + (hiduke.getMonth() + 1);
+    if (mKyuseiNum > 8) {
+      mKyuseiNum = mKyuseiNum - 9;
+    }
+    this.mKyusei = KYUSEIDATA_M[mKyuseiNum];
   };
   var p = lib.EtoObj.prototype;
   p.trunk = function(trunkNum) {

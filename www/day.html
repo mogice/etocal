@@ -10,11 +10,21 @@
     <ons-list-header>{{day.date | date:'yyyy年MM月dd日'}}({{day.day}})</ons-list-header>
     <ons-list-item class="item">
       <ons-row>
+        <ons-col>
+          年の九星:{{day.kyusei_y}}<br>
+          年の干支:{{day.eto_y}}
+        </ons-col>
+      </ons-row>
+      <ons-row>
+        <!--
         <ons-col width="60px"> 
           <div class="item-thum"></div>
         </ons-col>
+        -->
         <ons-col>
-          {{day.eto}}
+          月の九星:{{day.kyusei_m}}<br>
+          日の干支:{{day.eto_d}}<br>
+          六曜:{{day.rokuyo}}
         </ons-col>
       </ons-row>
     </ons-list-item>
@@ -22,13 +32,13 @@
 
   <!-- food -->
   <ons-list modifier="inset" style="margin-top: 10px">
-    <ons-list-header>ごはん</ons-list-header>
+    <ons-list-header>予定１</ons-list-header>
     <ons-list-item class="item" ng-repeat="item in day.food">
       <ons-row>
         <ons-col>
           <header>
-            <span class="item-title">時間：{{item.date | date:'HH:mm'}}</span><br/>
-            <span class="item-title">量　：{{item.amount}}</span></br>
+            <span class="item-title">時間：{{item.date | date:'HH:mm'}}</span><br>
+            <span class="item-title">内容：{{item.amount}}</span><br>
           </header>
           <p class="item-desc">{{item.memo}}</p>
         </ons-col>
@@ -43,13 +53,13 @@
 
   <!-- medicine -->
   <ons-list modifier="inset" style="margin-top: 10px">
-    <ons-list-header>おくすり</ons-list-header>
+    <ons-list-header>予定２</ons-list-header>
     <ons-list-item class="item" ng-repeat="item in day.medicine">
       <ons-row>
         <ons-col>
           <header>
-            <span class="item-title">時間：{{item.date | date:'HH:mm'}}</span><br/>
-            <span class="item-title">量　：{{item.amount}}</span></br>
+            <span class="item-title">時間：{{item.date | date:'HH:mm'}}</span><br>
+            <span class="item-title">内容：{{item.amount}}</span><br>
           </header>
           <p class="item-desc">{{item.memo}}</p>
         </ons-col>
