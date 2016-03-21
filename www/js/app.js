@@ -12,7 +12,7 @@
     // データベース接続
     var db = openDb('etocal_db', '', 'etocal db', 1024 * 1024 * 20);
     var sql = "";
-//    // データベース削除
+    // データベース削除
 //    var dropsql = "DROP TABLE IF EXISTS testtbl;";
 //    var dropsql = "DROP TABLE IF EXISTS cal_data;";
 //    execSQL(db, sql, [], function(rs) {
@@ -36,7 +36,13 @@
         + "description TEXT"
         + ");";
     execSQL(db, sql, [], function(rs) {
-//      // テーブル作成成功
+      // テーブル作成成功
+      sql = "SELECT * FROM cal_data";
+      execSQL(db, sql, [], function(rs) {
+        console.log('cal_data件数:' + rs.rows.length);
+      }, function(error) {
+        alert(error.message);
+      });
 //      sql = "SELECT id from cal_data where id = 1";
 //      execSQL(db, sql, [], function(rs) {
 //        if (rs.rows.length === 0 ) {
@@ -105,7 +111,7 @@
         // --干支算出
         var etoObj = new lib.EtoObj(currentDate);
         // 年月追加
-        months.push({year: year, month: month, kyusei: etoObj.mKyusei});
+        months.push({year: year, month: ('0' + month).slice(-2), kyusei: etoObj.mKyusei});
       }
       // 年追加
       years.push(year);
@@ -133,10 +139,10 @@
         var jkdataYomi = ['かのえ', 'かのと', 'みずのえ', 'みずのと', 'きのえ', 'きのと', 'ひのえ', 'ひのと', 'つちのえ', 'つちのと'];
         var jshidata = ['申', '酉', '戌', '亥', '子', '丑', '寅', '卯', '辰', '巳', '午', '未'];
         var jshidataYomi = ['さる', 'とり', 'いぬ', 'い', 'ね', 'うし', 'とら', 'う', 'たつ', 'み', 'うま', 'ひつじ'];
-        // 年家九星情報
-        var kyuseidata_y = ['二黒土星', '一白水星', '九紫火星', '八白土星', '七赤金星', '六白金星', '五黄土星', '四緑木星', '三碧木星'];
-        // 月家九星情報
-        var kyuseidata_m = ['四緑木星', '三碧木星', '二黒土星', '一白水星', '九紫火星', '八白土星', '七赤金星', '六白金星', '五黄土星'];
+//        // 年家九星情報
+//        var kyuseidata_y = ['二黒土星', '一白水星', '九紫火星', '八白土星', '七赤金星', '六白金星', '五黄土星', '四緑木星', '三碧木星'];
+//        // 月家九星情報
+//        var kyuseidata_m = ['四緑木星', '三碧木星', '二黒土星', '一白水星', '九紫火星', '八白土星', '七赤金星', '六白金星', '五黄土星'];
         // 曜日情報
         var day_ja = ['日', '月', '火', '水', '木', '金', '土'];
         // 日の情報
@@ -192,12 +198,11 @@
             rokuyo  : kr.rokuyo,
             kyusei_y: etoObj.yKyusei,
             kyusei_m: etoObj.mKyusei,
-            food    : [{date:new Date(2015, 2, 16, 9, 0, 0, 0), amount: 'たくさん', memo: ''},
-                       {date:new Date(2015, 2, 16, 18, 0, 0, 0), amount: 'ふつう', memo: 'おやつ少しとかメモってみたり。おやつ枠は別に作ったがいいかなあ。'}],
-            medicine: [{date:new Date(2015, 2, 16, 9, 0, 0, 0), amount: '2', memo: '調子が悪かったのでお薬大目。'},
-                       {date:new Date(2015, 2, 16, 18, 0, 0, 0), amount: '1', memo: '予防接種。'},
-                       {date:new Date(2015, 2, 16, 18, 0, 0, 0), amount: '9', memo: 'とくべつ。'}],
-            memo    : '予定'
+            schedule: [{title: '食事', date: new Date(2015, 2, 16, 9, 0, 0, 0), amount: 'たくさん', memo: ''},
+                       {title: '食事', date: new Date(2015, 2, 16, 18, 0, 0, 0), amount: 'ふつう', memo: 'おやつ少しとかメモってみたり。おやつ枠は別に作ったがいいかなあ。'},
+                       {title: '薬', date: new Date(2015, 2, 16, 9, 0, 0, 0), amount: '2', memo: '調子が悪かったのでお薬大目。'},
+                       {title: '薬', date: new Date(2015, 2, 16, 18, 0, 0, 0), amount: '1', memo: '予防接種。'},
+                       {title: '薬', date: new Date(2015, 2, 16, 18, 0, 0, 0), amount: '9', memo: 'とくべつ。'}]
           });
         }
         return days;
@@ -235,13 +240,22 @@
         // repeatItemの中身を替えればリフレッシュされる
         // 未来年月追加
         if (index >= $scope.months.length - 12) {
+          // 最終年取得
           var year = $scope.months[$scope.months.length - 1].year;
+          // 最終月+1月を取得
           var month = $scope.months[$scope.months.length - 1].month + 1;
           if (month > 12) {
+            // 最終月+1月が12を超える場合、年をインクリメント・月を1月にセット
             year++;
             month = 1;
           }
-          $scope.months.push({year: year, month: month});
+          // 九星取得
+          // --対象日取得
+          var currentDate = new Date(year, month - 1, 1);
+          // --干支算出
+          var etoObj = new lib.EtoObj(currentDate);
+          // 追加
+          $scope.months.push({year: year, month: ('0' + month).slice(-2), kyusei: etoObj.mKyusei});
         }
         // 表示アイテムセット
         itemScope.item = $scope.months[index];
@@ -292,20 +306,34 @@
               if (year >= to.year && month > to.month) {
                 continue;
               }
+              // 九星取得
+              // --対象日取得
+              var currentDate = new Date(year, month - 1, 1);
+              // --干支算出
+              var etoObj = new lib.EtoObj(currentDate);
               // 追加
-              $scope.months.push({year: year, month: month});
+              $scope.months.push({year: year, month: ('0' + month).slice(-2), kyusei: etoObj.mKyusei});
             }
           }
         } else {
           // 年月リスト設定済みの場合
           // 一か月前の年月を追加
+          // --先頭の年を取得
           var year = $scope.months[0].year;
+          // --先頭の月-1月を取得
           var month = $scope.months[0].month - 1;
           if (month < 1) {
+            // 先頭の月-1月が1を下回る場合、年をデクリメント・月を12月にセット
             year--;
             month = 12;
           }
-          $scope.months.unshift({year: year, month: month});
+          // 九星取得
+          // --対象日取得
+          var currentDate = new Date(year, month - 1, 1);
+          // --干支算出
+          var etoObj = new lib.EtoObj(currentDate);
+          // 挿入
+          $scope.months.unshift({year: year, month: ('0' + month).slice(-2), kyusei: etoObj.mKyusei});
         }
         // 処理終了後にコールバックを呼ぶ
         $done();
@@ -329,6 +357,22 @@
   module.controller('CalendarControllerD', ['$scope', '$timeout', '$dataDays', function($scope, $timeout, $dataDays) {
     $scope.day = $dataDays.data.selectedDay;
   }]);
+  
+  // 予定追加用コントローラ
+  module.controller('AddScheduleController', ['$scope', '$timeout', '$db', function($scope, $timeout, $db) {
+  }]);
+  
+  // select用コントローラ
+  module.controller('SelectController', function($scope) {
+      // バインドするモデル
+      $scope.selectedItem = null;
+      // ng-changeでバインドするイベントハンドラ(イベントオブジェクトは渡されないので注意)
+      $scope.changeItem = function() {
+        // 選択内容取得
+        var params = $scope.selectedItem.split(':');
+        document.getElementById(params[0]).href = params[1];
+      };
+  });
 })();
 
 ons.bootstrap(['myApp']);

@@ -2,4 +2,17 @@
   <ons-toolbar>
       <div class="center">Settings</div>
   </ons-toolbar>
+  
+  <ons-list modifier="inset" style="margin-top: 10px">
+    <ons-list-item>
+      テーマ
+      <select class="text-input text-input--transparent" ng-controller="SelectController" ng-model="selectedItem" ng-change="changeItem()">
+        <option value="mythemestyle:css/theme-default.css">default</option>
+        <option value="mythemestyle:css/theme-blue.css">blue</option>
+        <option value="mythemestyle:css/theme-dark.css">dark</option>
+        <option value="mythemestyle:css/theme-purple.css">purple</option>
+        <option value="mythemestyle:css/theme-sunshine.css">sunshine</option>
+      </select>
+    </ons-list-item>
+  </ons-list>
 </ons-page>

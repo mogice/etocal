@@ -35,6 +35,9 @@
     var mKyuseiNum = hiduke.getFullYear() % 3 * 3 + (hiduke.getMonth() + 1);
     if (mKyuseiNum > 8) {
       mKyuseiNum = mKyuseiNum - 9;
+      if (mKyuseiNum > 8) {
+        mKyuseiNum = mKyuseiNum - 9;
+      }
     }
     this.mKyusei = KYUSEIDATA_M[mKyuseiNum];
   };
