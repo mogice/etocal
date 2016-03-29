@@ -42,3 +42,12 @@
   color: #999;
   float: right;
 }
+ons-dialog:not([modifier='material']) p {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+/*
+input {
+  width: 100%;
+}
+*/

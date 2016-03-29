@@ -19,13 +19,14 @@
     hiduke.setMinutes(0);
     hiduke.setSeconds(0);
     hiduke.setMilliseconds(0);
-    // 年・日の干支計算
+    // 年の干支計算
     var yTrunkNum = (hiduke.getFullYear() + 6) % 10 + 1;
     var yBranchNum = (hiduke.getFullYear() + 8) % 12 + 1;
-    var dTrunkNum = (((hiduke.getTime() + MILLIS_DIFFERENCE) / COEFFICIENT + DATES_OFFSET) - 2) % 10 + 1;
-    var dBranchNum = (((hiduke.getTime() + MILLIS_DIFFERENCE) / COEFFICIENT + DATES_OFFSET) + 8) % 12 + 1;
     this.yJikkan = this.trunk(yTrunkNum);
     this.yJyunishi = this.branch(yBranchNum);
+    // 日の干支計算
+    var dTrunkNum = (((hiduke.getTime() + MILLIS_DIFFERENCE) / COEFFICIENT + DATES_OFFSET) - 2) % 10 + 1;
+    var dBranchNum = (((hiduke.getTime() + MILLIS_DIFFERENCE) / COEFFICIENT + DATES_OFFSET) + 8) % 12 + 1;
     this.dJikkan = this.trunk(dTrunkNum);
     this.dJyunishi = this.branch(dBranchNum);
     // 年家九星計算

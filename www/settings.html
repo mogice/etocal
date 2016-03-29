@@ -4,15 +4,22 @@
   </ons-toolbar>
   
   <ons-list modifier="inset" style="margin-top: 10px">
-    <ons-list-item>
+    <ons-list-item ng-controller="DialogController" ng-click="show('themelist.html')" modifier="tappable">
       テーマ
-      <select class="text-input text-input--transparent" ng-controller="SelectController" ng-model="selectedItem" ng-change="changeItem()">
-        <option value="mythemestyle:css/theme-default.css">default</option>
-        <option value="mythemestyle:css/theme-blue.css">blue</option>
-        <option value="mythemestyle:css/theme-dark.css">dark</option>
-        <option value="mythemestyle:css/theme-purple.css">purple</option>
-        <option value="mythemestyle:css/theme-sunshine.css">sunshine</option>
-      </select>
     </ons-list-item>
   </ons-list>
 </ons-page>
+
+<ons-template id="themelist.html">
+  <ons-dialog var="dialog" ng-controller="ThemelistController" cancelable>
+    <ons-list>
+      <ons-list-item ng-repeat="themeList in config.theme" modifier="tappable">
+        <label class="radio-button radio-button--list-item" style="color: #000000">
+          <input type="radio" ng-click="select(themeList)" name="theme" ng-value="themeList.value" check-on="themeList.selected=='checked'" radio-check>
+          <div class="radio-button__checkmark radio-button--list-item__checkmark"></div>
+          {{themeList.name}}
+        </label>
+      </ons-list-item>
+    </ons-list>
+  </ons-dialog>
+</ons-template>

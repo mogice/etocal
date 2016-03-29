@@ -5,21 +5,21 @@
   'use strict';
   
   // myAppモジュール
-  var module = angular.module('myApp', ['onsen.directives']);
+  var module = angular.module('myApp', ['onsen']);
   
   // データベースの準備
   module.factory('$db', function() {
     // データベース接続
     var db = openDb('etocal_db', '', 'etocal db', 1024 * 1024 * 20);
     var sql = "";
-    // データベース削除
-//    var dropsql = "DROP TABLE IF EXISTS testtbl;";
-//    var dropsql = "DROP TABLE IF EXISTS cal_data;";
-//    execSQL(db, sql, [], function(rs) {
-//      alert('table drop!');
-//    }, function(error) {
-//      alert(error.message);
-//    });
+    // テーブル削除
+    // var dropsql = "DROP TABLE IF EXISTS testtbl;";
+    // var dropsql = "DROP TABLE IF EXISTS cal_data;";
+    // execSQL(db, sql, [], function(rs) {
+    //  alert('table drop!');
+    // }, function(error) {
+    //  alert(error.message);
+    // });
     // テーブル作成
     sql = "CREATE TABLE IF NOT EXISTS cal_data("
         + "id INTEGER PRIMARY KEY,"
@@ -37,39 +37,39 @@
         + ");";
     execSQL(db, sql, [], function(rs) {
       // テーブル作成成功
-      sql = "SELECT * FROM cal_data";
-      execSQL(db, sql, [], function(rs) {
-        console.log('cal_data件数:' + rs.rows.length);
-      }, function(error) {
-        alert(error.message);
-      });
-//      sql = "SELECT id from cal_data where id = 1";
-//      execSQL(db, sql, [], function(rs) {
-//        if (rs.rows.length === 0 ) {
-//          sql = "INSERT INTO testtbl values(1, 'memo1')";
-//          execSQL(db, sql, [], function(rs) {
-//            alert(sql);
-//          }, function(error) {
-//            alert(error.message);
-//          });
-//        }
-//      }, function(error) {
-//        alert(error.message);
-//      });
-//      // 
-//      sql = "SELECT id from cal_data where id = 2";
-//      execSQL(db, sql, [], function(rs) {
-//        if (rs.rows.length === 0 ) {
-//          sql = "INSERT INTO testtbl values(2, 'memo2')";
-//          execSQL(db, sql, [], function(rs) {
-//            alert(sql);
-//          }, function(error) {
-//            alert(error.message);
-//          });
-//        }
-//      }, function(error) {
-//        alert(error.message);
-//      });
+      // sql = "SELECT * FROM cal_data";
+      // execSQL(db, sql, [], function(rs) {
+      //   console.log('cal_data件数:' + rs.rows.length);
+      // }, function(error) {
+      //   alert(error.message);
+      // });
+      // sql = "SELECT id from cal_data where id = 1";
+      // execSQL(db, sql, [], function(rs) {
+      //   if (rs.rows.length === 0 ) {
+      //     sql = "INSERT INTO testtbl values(1, 'memo1')";
+      //     execSQL(db, sql, [], function(rs) {
+      //       alert(sql);
+      //     }, function(error) {
+      //       alert(error.message);
+      //     });
+      //   }
+      // }, function(error) {
+      //   alert(error.message);
+      // });
+      // // 
+      // sql = "SELECT id from cal_data where id = 2";
+      // execSQL(db, sql, [], function(rs) {
+      //   if (rs.rows.length === 0 ) {
+      //     sql = "INSERT INTO testtbl values(2, 'memo2')";
+      //     execSQL(db, sql, [], function(rs) {
+      //       alert(sql);
+      //     }, function(error) {
+      //       alert(error.message);
+      //     });
+      //   }
+      // }, function(error) {
+      //   alert(error.message);
+      // });
     }, function(error) {
       // テーブル作成失敗
       alert(error.message);
@@ -139,10 +139,10 @@
         var jkdataYomi = ['かのえ', 'かのと', 'みずのえ', 'みずのと', 'きのえ', 'きのと', 'ひのえ', 'ひのと', 'つちのえ', 'つちのと'];
         var jshidata = ['申', '酉', '戌', '亥', '子', '丑', '寅', '卯', '辰', '巳', '午', '未'];
         var jshidataYomi = ['さる', 'とり', 'いぬ', 'い', 'ね', 'うし', 'とら', 'う', 'たつ', 'み', 'うま', 'ひつじ'];
-//        // 年家九星情報
-//        var kyuseidata_y = ['二黒土星', '一白水星', '九紫火星', '八白土星', '七赤金星', '六白金星', '五黄土星', '四緑木星', '三碧木星'];
-//        // 月家九星情報
-//        var kyuseidata_m = ['四緑木星', '三碧木星', '二黒土星', '一白水星', '九紫火星', '八白土星', '七赤金星', '六白金星', '五黄土星'];
+        // // 年家九星情報
+        // var kyuseidata_y = ['二黒土星', '一白水星', '九紫火星', '八白土星', '七赤金星', '六白金星', '五黄土星', '四緑木星', '三碧木星'];
+        // // 月家九星情報
+        // var kyuseidata_m = ['四緑木星', '三碧木星', '二黒土星', '一白水星', '九紫火星', '八白土星', '七赤金星', '六白金星', '五黄土星'];
         // 曜日情報
         var day_ja = ['日', '月', '火', '水', '木', '金', '土'];
         // 日の情報
@@ -152,10 +152,10 @@
         var first_day = first.getDay();
         var last_date = last.getDate();
         
-//        var sql = "SELECT memo from testtbl where id = ?";
+        // var sql = "SELECT memo from testtbl where id = ?";
         var sql = "SELECT id from cal_data ORDER BY id DESC;";
         var params = [];
-//        params.push(1);
+        // params.push(1);
         execSQL($db, sql, params, function(rs) {
           for (var i=0; i < rs.rows.length; i++) {
             var row = rs.rows.item(i);
@@ -176,19 +176,19 @@
           // 年の干支編集
           var eto_y = etoObj.yJikkan.kanji + etoObj.yJyunishi.kanji + 
                       '(' + etoObj.yJikkan.yomi + etoObj.yJyunishi.yomi + ')';
-//          var eto_y = jkdata[kr.year % 10] + jshidata[kr.year % 12] + 
-//                      '(' + jkdataYomi[kr.year % 10] + jshidataYomi[kr.year % 12] + ')';
+          // var eto_y = jkdata[kr.year % 10] + jshidata[kr.year % 12] + 
+          //             '(' + jkdataYomi[kr.year % 10] + jshidataYomi[kr.year % 12] + ')';
           // 旧暦情報取得
           var kr = new kyureki(currentDate.getJD());
-//          // 年家九星の取得（旧暦）
-//          var yKyuseiNum = kr.year % 9;
-//          var yKyusei = kyuseidata_y[yKyuseiNum];
-//          // 月家九星の取得（旧暦）
-//          var mKyuseiNum = kr.year % 3 * 3 + kr.month;
-//          if (mKyuseiNum > 8) {
-//            mKyuseiNum = mKyuseiNum - 9;
-//          }
-//          var mKyusei = kyuseidata_m[mKyuseiNum];
+          // // 年家九星の取得（旧暦）
+          // var yKyuseiNum = kr.year % 9;
+          // var yKyusei = kyuseidata_y[yKyuseiNum];
+          // // 月家九星の取得（旧暦）
+          // var mKyuseiNum = kr.year % 3 * 3 + kr.month;
+          // if (mKyuseiNum > 8) {
+          //   mKyuseiNum = mKyuseiNum - 9;
+          // }
+          // var mKyusei = kyuseidata_m[mKyuseiNum];
           // 日の情報を追加
           days.push({
             date    : currentDate,
@@ -213,6 +213,19 @@
   
   // 共通コントローラ
   module.controller('AppController', ['$scope', '$timeout', '$db', function($scope, $timeout, $db) {
+    // 起動時処理
+    ons.ready(function() {
+      if (!window.localStorage.getItem('themesetting')) {
+        var obj = {name: 'default', value: 'mythemestyle:css/theme-default.css', selected: 'checked'};
+        window.localStorage.setItem('themesetting', JSON.stringify(obj));
+      } else {
+        var str = window.localStorage.getItem('themesetting');
+        var obj = JSON.parse(str);
+        var params = obj.value.split(':');
+        document.getElementById(params[0]).href = params[1];
+      }
+    });
+    // ボタンクリック時
     $scope.doSomething = function() {
       $timeout(function() {
         alert('tappaed');
@@ -362,16 +375,71 @@
   module.controller('AddScheduleController', ['$scope', '$timeout', '$db', function($scope, $timeout, $db) {
   }]);
   
-  // select用コントローラ
-  module.controller('SelectController', function($scope) {
-      // バインドするモデル
-      $scope.selectedItem = null;
-      // ng-changeでバインドするイベントハンドラ(イベントオブジェクトは渡されないので注意)
-      $scope.changeItem = function() {
-        // 選択内容取得
-        var params = $scope.selectedItem.split(':');
-        document.getElementById(params[0]).href = params[1];
-      };
+  // inputタグのchecked属性を有効にするディレクティブ
+  module.directive("radioCheck", function() {
+    return {
+      restrict : "A",
+      scope : {checkOn : "="},
+      link : function(scope, elem, attr) {
+        if (scope.checkOn) {
+          elem[0].checked = true;
+        }
+      }
+    };
+  });
+  
+  // dialog用コントローラ
+  module.controller('DialogController', function($scope) {
+    // ダイアログモデル
+    $scope.dialogs = {};
+    // ダイアログ表示
+    $scope.show = function(dlg) {
+      if (!$scope.dialogs[dlg]) {
+        ons.createDialog(dlg).then(function(dialog) {
+          $scope.dialogs[dlg] = dialog;
+          dialog.show();
+        });
+      } else {
+        $scope.dialogs[dlg].show();
+      }
+    };
+  });
+  
+  // Themelist用コントローラ
+  module.controller('ThemelistController', function($scope) {
+    // テーマ設定内容
+    $scope.config = {
+      theme: [
+        {name: 'default', value: 'mythemestyle:css/theme-default.css', selected: 'checked'},
+        {name: 'blue', value: 'mythemestyle:css/theme-blue.css', selected: ''},
+        {name: 'dark', value: 'mythemestyle:css/theme-dark.css', selected: ''},
+        {name: 'purple', value: 'mythemestyle:css/theme-purple.css', selected: ''},
+        {name: 'sunshine', value: 'mythemestyle:css/theme-sunshine.css', selected: ''},
+      ]
+    };
+    // 起動時処理
+    ons.ready(function() {
+      var str = window.localStorage.getItem('themesetting');
+      var obj = JSON.parse(str);
+      for (var cnt = 0; cnt < $scope.config.theme.length; cnt++) {
+        if (obj.name === $scope.config.theme[cnt].name) {
+          $scope.config.theme[cnt].selected = 'checked';
+        } else {
+          $scope.config.theme[cnt].selected = '';
+        }
+      }
+    });
+    // テーマ選択
+    $scope.select = function(themeList) {
+      // 選択内容反映
+      var params = themeList.value.split(':');
+      document.getElementById(params[0]).href = params[1];
+      // 設定書き込み
+      var obj = themeList;
+      window.localStorage.setItem('themesetting', JSON.stringify(obj));
+      // ダイアログ非表示
+      dialog.hide();
+    };
   });
 })();
 
