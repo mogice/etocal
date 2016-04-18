@@ -11,6 +11,8 @@
   var KYUSEIDATA_Y = ['二黒土星', '一白水星', '九紫火星', '八白土星', '七赤金星', '六白金星', '五黄土星', '四緑木星', '三碧木星'];
   // 月家九星情報
   var KYUSEIDATA_M = ['四緑木星', '三碧木星', '二黒土星', '一白水星', '九紫火星', '八白土星', '七赤金星', '六白金星', '五黄土星'];
+  // 日家九星情報
+  var KYUSEIDATA_D = ['一白水星', '二黒土星', '三碧木星', '四緑木星', '五黄土星', '六白金星', '七赤金星', '八白土星', '九紫火星'];
   // コンストラクタ
   lib.EtoObj = function(date) {
     // 日付セット
@@ -24,6 +26,11 @@
     var yBranchNum = (hiduke.getFullYear() + 8) % 12 + 1;
     this.yJikkan = this.trunk(yTrunkNum);
     this.yJyunishi = this.branch(yBranchNum);
+    // 月の干支計算
+    var mTrunkNum = ((hiduke.getFullYear() + 6) * 12 + hiduke.getMonth() + 1) % 10 + 1;
+    var mBranchNum = ((hiduke.getFullYear() + 8) * 12 + hiduke.getMonth() + 1) % 12 + 1;
+    this.mJikkan = this.trunk(mTrunkNum);
+    this.mJyunishi = this.branch(mBranchNum);
     // 日の干支計算
     var dTrunkNum = (((hiduke.getTime() + MILLIS_DIFFERENCE) / COEFFICIENT + DATES_OFFSET) - 2) % 10 + 1;
     var dBranchNum = (((hiduke.getTime() + MILLIS_DIFFERENCE) / COEFFICIENT + DATES_OFFSET) + 8) % 12 + 1;
@@ -41,6 +48,9 @@
       }
     }
     this.mKyusei = KYUSEIDATA_M[mKyuseiNum];
+    // 日家九星計算
+    var jd = hiduke.getJD();
+    this.dKyusei = '';
   };
   var p = lib.EtoObj.prototype;
   p.trunk = function(trunkNum) {

@@ -110,8 +110,11 @@
         var currentDate = new Date(year, month - 1, 1);
         // --干支算出
         var etoObj = new lib.EtoObj(currentDate);
+        // 月の干支編集
+        var eto_m = etoObj.mJikkan.kanji + etoObj.mJyunishi.kanji + 
+                    '(' + etoObj.mJikkan.yomi + etoObj.mJyunishi.yomi + ')';
         // 年月追加
-        months.push({year: year, month: ('0' + month).slice(-2), kyusei: etoObj.mKyusei});
+        months.push({year: year, month: ('0' + month).slice(-2), kyusei: etoObj.mKyusei, eto: eto_m});
       }
       // 年追加
       years.push(year);
@@ -134,11 +137,11 @@
     var service = {
       data : {},
       getData : function(selectedYM) {
-        // 年の干支情報
-        var jkdata = ['庚', '辛', '壬', '癸', '甲', '乙', '丙', '丁', '戊', '己'];
-        var jkdataYomi = ['かのえ', 'かのと', 'みずのえ', 'みずのと', 'きのえ', 'きのと', 'ひのえ', 'ひのと', 'つちのえ', 'つちのと'];
-        var jshidata = ['申', '酉', '戌', '亥', '子', '丑', '寅', '卯', '辰', '巳', '午', '未'];
-        var jshidataYomi = ['さる', 'とり', 'いぬ', 'い', 'ね', 'うし', 'とら', 'う', 'たつ', 'み', 'うま', 'ひつじ'];
+        // // 年の干支情報
+        // var jkdata = ['庚', '辛', '壬', '癸', '甲', '乙', '丙', '丁', '戊', '己'];
+        // var jkdataYomi = ['かのえ', 'かのと', 'みずのえ', 'みずのと', 'きのえ', 'きのと', 'ひのえ', 'ひのと', 'つちのえ', 'つちのと'];
+        // var jshidata = ['申', '酉', '戌', '亥', '子', '丑', '寅', '卯', '辰', '巳', '午', '未'];
+        // var jshidataYomi = ['さる', 'とり', 'いぬ', 'い', 'ね', 'うし', 'とら', 'う', 'たつ', 'み', 'うま', 'ひつじ'];
         // // 年家九星情報
         // var kyuseidata_y = ['二黒土星', '一白水星', '九紫火星', '八白土星', '七赤金星', '六白金星', '五黄土星', '四緑木星', '三碧木星'];
         // // 月家九星情報
@@ -170,14 +173,17 @@
           var currentDate = new Date(selectedYM.year, selectedYM.month - 1, date);
           // 干支算出
           var etoObj = new lib.EtoObj(currentDate);
-          // 日の干支編集
-          var eto_d = etoObj.dJikkan.kanji + etoObj.dJyunishi.kanji + 
-                      '(' + etoObj.dJikkan.yomi + etoObj.dJyunishi.yomi + ')';
           // 年の干支編集
           var eto_y = etoObj.yJikkan.kanji + etoObj.yJyunishi.kanji + 
                       '(' + etoObj.yJikkan.yomi + etoObj.yJyunishi.yomi + ')';
           // var eto_y = jkdata[kr.year % 10] + jshidata[kr.year % 12] + 
           //             '(' + jkdataYomi[kr.year % 10] + jshidataYomi[kr.year % 12] + ')';
+          // 月の干支編集
+          var eto_m = etoObj.mJikkan.kanji + etoObj.mJyunishi.kanji + 
+                      '(' + etoObj.mJikkan.yomi + etoObj.mJyunishi.yomi + ')';
+          // 日の干支編集
+          var eto_d = etoObj.dJikkan.kanji + etoObj.dJyunishi.kanji + 
+                      '(' + etoObj.dJikkan.yomi + etoObj.dJyunishi.yomi + ')';
           // 旧暦情報取得
           var kr = new kyureki(currentDate.getJD());
           // // 年家九星の取得（旧暦）
@@ -193,8 +199,9 @@
           days.push({
             date    : currentDate,
             day     : day_ja[currentDate.getDay()],
-            eto_d   : eto_d,
             eto_y   : eto_y,
+            eto_m   : eto_m,
+            eto_d   : eto_d,
             rokuyo  : kr.rokuyo,
             kyusei_y: etoObj.yKyusei,
             kyusei_m: etoObj.mKyusei,
@@ -267,8 +274,11 @@
           var currentDate = new Date(year, month - 1, 1);
           // --干支算出
           var etoObj = new lib.EtoObj(currentDate);
+          // 月の干支編集
+          var eto_m = etoObj.mJikkan.kanji + etoObj.mJyunishi.kanji + 
+                      '(' + etoObj.mJikkan.yomi + etoObj.mJyunishi.yomi + ')';
           // 追加
-          $scope.months.push({year: year, month: ('0' + month).slice(-2), kyusei: etoObj.mKyusei});
+          $scope.months.push({year: year, month: ('0' + month).slice(-2), kyusei: etoObj.mKyusei, eto: eto_m});
         }
         // 表示アイテムセット
         itemScope.item = $scope.months[index];
@@ -324,8 +334,11 @@
               var currentDate = new Date(year, month - 1, 1);
               // --干支算出
               var etoObj = new lib.EtoObj(currentDate);
+              // 月の干支編集
+              var eto_m = etoObj.mJikkan.kanji + etoObj.mJyunishi.kanji + 
+                          '(' + etoObj.mJikkan.yomi + etoObj.mJyunishi.yomi + ')';
               // 追加
-              $scope.months.push({year: year, month: ('0' + month).slice(-2), kyusei: etoObj.mKyusei});
+              $scope.months.push({year: year, month: ('0' + month).slice(-2), kyusei: etoObj.mKyusei, eto: eto_m});
             }
           }
         } else {
@@ -345,8 +358,11 @@
           var currentDate = new Date(year, month - 1, 1);
           // --干支算出
           var etoObj = new lib.EtoObj(currentDate);
+          // 月の干支編集
+          var eto_m = etoObj.mJikkan.kanji + etoObj.mJyunishi.kanji + 
+                      '(' + etoObj.mJikkan.yomi + etoObj.mJyunishi.yomi + ')';
           // 挿入
-          $scope.months.unshift({year: year, month: ('0' + month).slice(-2), kyusei: etoObj.mKyusei});
+          $scope.months.unshift({year: year, month: ('0' + month).slice(-2), kyusei: etoObj.mKyusei, eto: eto_m});
         }
         // 処理終了後にコールバックを呼ぶ
         $done();
