@@ -27,7 +27,13 @@
     <ons-list-item modifier="chevron" ons-lazy-repeat="MyDelegate" ng-click="showMonth($index)">
       <ons-row>
         <ons-col>
-          {{item.year}}年{{item.month}}月&nbsp;&nbsp;{{item.kyusei}}&nbsp;&nbsp;{{item.eto}}
+          <header>
+            <span class="item-title">{{item.year}}年{{item.month}}月</span>
+          </header>
+          <p class="item-desc">
+            {{item.kyusei}}&nbsp;&nbsp;
+            {{item.eto}}&nbsp;&nbsp;
+          </p>
         </ons-col>
       </ons-row>
     </ons-list-item>

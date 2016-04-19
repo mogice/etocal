@@ -66,10 +66,12 @@
 // グローバル変数
 var k = Math.PI / 180;
 var dt = new Date(); // tzを算出するためのDateオブジェクト生成
-var tz = dt.getTimezoneOffset() / 1440; // タイムゾーンオフセット
+var tz = dt.getTimezoneOffset() / 1440; // タイムゾーンオフセット(1440:60分×24時間=1日(1440分))
 var rm_sun0; // 太陽黄経
 
 // プロトタイプ宣言 - Dateオブジェクトにユリウス日(JST)を扱うメソッドを追加
+// 2440587:1970年1月1日0時0分0秒(UTC)のユリウス日
+// 864e5:1000ミリ秒×60秒×60分×24時間=1日(86400000ミリ秒)
 Date.prototype.getJD = Date_getJD;
 Date.prototype.setJD = Date_setJD;
 function Date_getJD() {

@@ -205,6 +205,7 @@
             rokuyo  : kr.rokuyo,
             kyusei_y: etoObj.yKyusei,
             kyusei_m: etoObj.mKyusei,
+            kyusei_d: etoObj.dKyusei,
             schedule: [{title: '食事', date: new Date(2015, 2, 16, 9, 0, 0, 0), amount: 'たくさん', memo: ''},
                        {title: '食事', date: new Date(2015, 2, 16, 18, 0, 0, 0), amount: 'ふつう', memo: 'おやつ少しとかメモってみたり。おやつ枠は別に作ったがいいかなあ。'},
                        {title: '薬', date: new Date(2015, 2, 16, 9, 0, 0, 0), amount: '2', memo: '調子が悪かったのでお薬大目。'},
@@ -285,7 +286,7 @@
       },
       calculateItemHeight: function(index) {
         // 要素の高さをpx指定
-        return 50;
+        return 65;
       },
       countItems: function() {
         // 全体の要素数
