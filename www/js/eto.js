@@ -7,12 +7,8 @@
   var DATES_OFFSET = 70 * 365 + 17 + 2;
   // UTCとJSTの時差 (ミリ秒)
   var MILLIS_DIFFERENCE = 9 * 60 * 60 * 1000;
-  // 年家九星情報
-  var KYUSEIDATA_Y = ['二黒土星', '一白水星', '九紫火星', '八白土星', '七赤金星', '六白金星', '五黄土星', '四緑木星', '三碧木星'];
-  // 月家九星情報
-  var KYUSEIDATA_M = ['四緑木星', '三碧木星', '二黒土星', '一白水星', '九紫火星', '八白土星', '七赤金星', '六白金星', '五黄土星'];
-  // 日家九星情報
-  var KYUSEIDATA_D = ['一白水星', '二黒土星', '三碧木星', '四緑木星', '五黄土星', '六白金星', '七赤金星', '八白土星', '九紫火星'];
+  // 九星情報
+  var KYUSEIDATA = ['一白水星', '二黒土星', '三碧木星', '四緑木星', '五黄土星', '六白金星', '七赤金星', '八白土星', '九紫火星'];
   // 月の日数
   var MDAYS = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
   // 日本の時差 + 最近のΔT :: 手抜き
@@ -44,27 +40,44 @@
     this.dJikkan = this.trunk(dTrunkNum);
     this.dJyunishi = this.branch(dBranchNum);
     // 【年家九星計算】
-    var yKyuseiNum = hiduke.getFullYear() % 9;
-    this.yKyusei = KYUSEIDATA_Y[yKyuseiNum];
-    // 【月家九星計算】
-    var mKyuseiNum = hiduke.getFullYear() % 3 * 3 + (hiduke.getMonth() + 1);
-    if (mKyuseiNum > 8) {
-      mKyuseiNum = mKyuseiNum - 9;
-      if (mKyuseiNum > 8) {
-        mKyuseiNum = mKyuseiNum - 9;
-      }
+    this.yKyusei = Year2KyuuseiName(hiduke.getFullYear());
+    this.yKyuseiNum = Year2Kyuusei(hiduke.getFullYear()) + 1;
+    // --西暦年の九星名を得る
+    function Year2KyuuseiName(yy) {
+      var ans;
+      ans = Year2Kyuusei(yy);
+      return KYUSEIDATA[ans];
     }
-    this.mKyusei = KYUSEIDATA_M[mKyuseiNum];
+    // --西暦年の九星を得る(0-8 が戻り値)
+    function Year2Kyuusei(yy)
+    {
+      return 8 - ((yy + 115) % 9);
+    }
+    // 【月家九星計算】
+    this.mKyusei = Month2KyuuseiName(hiduke.getFullYear(), hiduke.getMonth() + 1);
+    this.mKyuseiNum = Month2Kyuusei(hiduke.getFullYear(), hiduke.getMonth() + 1) + 1;
+    // --節年月の九星名（短）を得る
+    function Month2KyuuseiName(yy, mm) {
+      var ans;
+      ans = Month2Kyuusei(yy, mm);
+      return KYUSEIDATA[ans];
+    }
+    // --節年月の九星を得る(0-8 が戻り値)
+    function Month2Kyuusei(yy, mm)
+    {
+      return 8 - (((yy + 116) * 12 + mm) % 9);
+    }
     // 【日家九星計算】
     var jd = hiduke.getJD();
     this.dKyusei = jd2KyuuseiName(jd);
+    this.dKyuseiNum = jd2Kyuusei(jd) + 1;
     // --JD から九星の呼び名を得る
     function jd2KyuuseiName(JD) {
       var ans;
       // JD から日家9星を求める（答えは 0-8）
       ans = jd2Kyuusei(JD);
       if (ans >= 0) {
-        return (KYUSEIDATA_D[ans]);
+        return (KYUSEIDATA[ans]);
       }
       return '';
     }

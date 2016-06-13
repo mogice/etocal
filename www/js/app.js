@@ -197,20 +197,23 @@
           // var mKyusei = kyuseidata_m[mKyuseiNum];
           // 日の情報を追加
           days.push({
-            date    : currentDate,
-            day     : day_ja[currentDate.getDay()],
-            eto_y   : eto_y,
-            eto_m   : eto_m,
-            eto_d   : eto_d,
-            rokuyo  : kr.rokuyo,
-            kyusei_y: etoObj.yKyusei,
-            kyusei_m: etoObj.mKyusei,
-            kyusei_d: etoObj.dKyusei,
-            schedule: [{title: '食事', date: new Date(2015, 2, 16, 9, 0, 0, 0), amount: 'たくさん', memo: ''},
-                       {title: '食事', date: new Date(2015, 2, 16, 18, 0, 0, 0), amount: 'ふつう', memo: 'おやつ少しとかメモってみたり。おやつ枠は別に作ったがいいかなあ。'},
-                       {title: '薬', date: new Date(2015, 2, 16, 9, 0, 0, 0), amount: '2', memo: '調子が悪かったのでお薬大目。'},
-                       {title: '薬', date: new Date(2015, 2, 16, 18, 0, 0, 0), amount: '1', memo: '予防接種。'},
-                       {title: '薬', date: new Date(2015, 2, 16, 18, 0, 0, 0), amount: '9', memo: 'とくべつ。'}]
+            date        : currentDate,
+            day         : day_ja[currentDate.getDay()],
+            eto_y       : eto_y,
+            eto_m       : eto_m,
+            eto_d       : eto_d,
+            rokuyo      : kr.rokuyo,
+            kyusei_y    : etoObj.yKyusei,
+            kyusei_y_num: etoObj.yKyuseiNum,
+            kyusei_m    : etoObj.mKyusei,
+            kyusei_m_num: etoObj.mKyuseiNum,
+            kyusei_d    : etoObj.dKyusei,
+            kyusei_d_num: etoObj.dKyuseiNum,
+            schedule    : [{title: '食事', date: new Date(2015, 2, 16, 9, 0, 0, 0), amount: 'たくさん', memo: ''},
+                           {title: '食事', date: new Date(2015, 2, 16, 18, 0, 0, 0), amount: 'ふつう', memo: 'おやつ少しとかメモってみたり。おやつ枠は別に作ったがいいかなあ。'},
+                           {title: '薬', date: new Date(2015, 2, 16, 9, 0, 0, 0), amount: '2', memo: '調子が悪かったのでお薬大目。'},
+                           {title: '薬', date: new Date(2015, 2, 16, 18, 0, 0, 0), amount: '1', memo: '予防接種。'},
+                           {title: '薬', date: new Date(2015, 2, 16, 18, 0, 0, 0), amount: '9', memo: 'とくべつ。'}]
           });
         }
         return days;
