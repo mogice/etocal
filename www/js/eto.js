@@ -28,25 +28,25 @@
     hiduke.setMinutes(0);
     hiduke.setSeconds(0);
     hiduke.setMilliseconds(0);
-    // 年の干支計算
+    // 【年の干支計算】
     var yTrunkNum = (hiduke.getFullYear() + 6) % 10 + 1;
     var yBranchNum = (hiduke.getFullYear() + 8) % 12 + 1;
     this.yJikkan = this.trunk(yTrunkNum);
     this.yJyunishi = this.branch(yBranchNum);
-    // 月の干支計算
+    // 【月の干支計算】
     var mTrunkNum = ((hiduke.getFullYear() + 6) * 12 + hiduke.getMonth() + 1) % 10 + 1;
     var mBranchNum = ((hiduke.getFullYear() + 8) * 12 + hiduke.getMonth() + 1) % 12 + 1;
     this.mJikkan = this.trunk(mTrunkNum);
     this.mJyunishi = this.branch(mBranchNum);
-    // 日の干支計算
+    // 【日の干支計算】
     var dTrunkNum = (((hiduke.getTime() + MILLIS_DIFFERENCE) / COEFFICIENT + DATES_OFFSET) - 2) % 10 + 1;
     var dBranchNum = (((hiduke.getTime() + MILLIS_DIFFERENCE) / COEFFICIENT + DATES_OFFSET) + 8) % 12 + 1;
     this.dJikkan = this.trunk(dTrunkNum);
     this.dJyunishi = this.branch(dBranchNum);
-    // 年家九星計算
+    // 【年家九星計算】
     var yKyuseiNum = hiduke.getFullYear() % 9;
     this.yKyusei = KYUSEIDATA_Y[yKyuseiNum];
-    // 月家九星計算
+    // 【月家九星計算】
     var mKyuseiNum = hiduke.getFullYear() % 3 * 3 + (hiduke.getMonth() + 1);
     if (mKyuseiNum > 8) {
       mKyuseiNum = mKyuseiNum - 9;
@@ -55,7 +55,7 @@
       }
     }
     this.mKyusei = KYUSEIDATA_M[mKyuseiNum];
-    // 日家九星計算
+    // 【日家九星計算】
     var jd = hiduke.getJD();
     this.dKyusei = jd2KyuuseiName(jd);
     // --JD から九星の呼び名を得る
@@ -104,7 +104,7 @@
       // 転遁日検索フラグ初期化
       n = false;
       yyt = yy + 0.25;
-      // ---------- 転遁のJD を探索 ------------
+      // 転遁のJD を探索
       while (!n) {
         yyn = Math.floor(yyt);
         lg = (yyt - Math.floor(yyt)) * 360.0;
@@ -148,7 +148,7 @@
           }
         }
       }
-      // ---------- 転遁の情報をセット ------------
+      // 転遁の情報をセット
       tenton_inf[0] = KJD[0];
       tenton_inf[1] = 180;
       if ((yyt - yyn) > 0.5) {
